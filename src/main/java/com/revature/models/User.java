@@ -13,6 +13,20 @@ public class User {
 
     private Role role;
 
+    public User(String firstName, String lastName, String email, String password){
+        this.FirstName = firstName;
+        this.LastName = lastName;
+        this.Email = email;
+        this.Password = password;
+
+        // We don't want to take in userId or role because we want these to be set to a default value
+        this.role = Role.USER;
+    }
+
+    public User() {
+
+    }
+
     // Getters and Setters
     public int getUserId() { return UserId;}
 
@@ -36,5 +50,5 @@ public class User {
 
     public Role getRole() { return role;}
 
-    public void setRole(Role role) { this.role = role;}
+    public void setRole(Role role) { this.role = role; }
 }

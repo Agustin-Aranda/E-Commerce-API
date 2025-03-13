@@ -13,7 +13,7 @@ public class ConnectionUtil {
     private static Connection conn = null;
     //Private constructor
     private  ConnectionUtil(){
-
+        // Having this be private means NOBODY can make an instance of this class at all
     }
 
     //public static getInstance method
