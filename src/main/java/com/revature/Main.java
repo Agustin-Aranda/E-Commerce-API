@@ -3,18 +3,11 @@ package com.revature;
 import com.revature.controllers.UserController;
 import com.revature.models.Role;
 import com.revature.models.User;
-import com.revature.repos.UserDAO;
+import com.revature.repos.interfaces.UserDAO;
 import com.revature.repos.UserDAOImpl;
 import com.revature.services.UserService;
-import com.revature.util.ConnectionUtil;
 import com.revature.util.MenusUtil;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -28,7 +21,6 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         UserService userService = new UserService(userDAO);
         UserController userController = new UserController(userService, scan);
-
 
 
         while (running) {

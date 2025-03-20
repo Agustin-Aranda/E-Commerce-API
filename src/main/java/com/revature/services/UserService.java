@@ -1,7 +1,7 @@
 package com.revature.services;
 
 import com.revature.models.User;
-import com.revature.repos.UserDAO;
+import com.revature.repos.interfaces.UserDAO;
 import com.revature.util.PasswordUtil;
 
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package com.revature.repos;
+package com.revature.repos.interfaces;
 
 import java.util.List;
 

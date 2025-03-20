@@ -1,8 +1,6 @@
 package com.revature.controllers;
 
 import com.revature.models.User;
-import com.revature.repos.UserDAO;
-import com.revature.repos.UserDAOImpl;
 import com.revature.services.UserService;
 import com.revature.util.PasswordUtil;
 
@@ -84,6 +82,5 @@ public class UserController {
 
         System.out.println("Welcome back " + returnUser.getFirstName() +" " + returnUser.getLastName()+ "!");
         return returnUser;
-
     }
 }
