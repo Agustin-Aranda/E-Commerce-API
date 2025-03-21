@@ -3,13 +3,12 @@ package com.revature.repos;
 import com.revature.models.CartItem;
 import com.revature.models.Order;
 import com.revature.models.OrderItem;
+import com.revature.models.OrderStatus;
 import com.revature.repos.interfaces.OrderItemDAO;
 import com.revature.util.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OderItemDAOImpl implements OrderItemDAO {
@@ -53,11 +52,65 @@ public class OderItemDAOImpl implements OrderItemDAO {
 
     @Override
     public List<OrderItem> getAll() {
-        return List.of();
+        List<OrderItem> allOrderItems = new ArrayList<>();
+
+        Connection conn = ConnectionUtil.getConnection();
+
+        String sql = "SELECT * FROM ORDERITEM";
+
+        try {
+            // We need to create Statement Object
+            Statement stmt = conn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+
+                OrderItem ordI = new OrderItem();
+                ordI.setOrderItemId(rs.getInt("order_item_id"));
+                ordI.setOrderId(rs.getInt("order_id"));
+                ordI.setProductId(rs.getInt("product_id"));
+                ordI.setQuantity(rs.getInt("quantity"));
+                ordI.setPrice(rs.getDouble("price"));
+
+                allOrderItems.add(ordI);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not get all OrdersItems!");
+            e.printStackTrace();
+        }
+        return allOrderItems;
     }
 
     @Override
     public OrderItem getById(int id) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+
+            String sql = "SELECT * FROM ORDERITEM WHERE order_id = ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, id);
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                OrderItem ordI = new OrderItem();
+                ordI.setOrderItemId(rs.getInt("order_item_id"));
+                ordI.setOrderId(rs.getInt("order_id"));
+                ordI.setProductId(rs.getInt("product_id"));
+                ordI.setQuantity(rs.getInt("quantity"));
+                ordI.setPrice(rs.getDouble("price"));
+
+                return ordI;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not retrieve OrderItem by Id");
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -68,6 +121,19 @@ public class OderItemDAOImpl implements OrderItemDAO {
 
     @Override
     public boolean deleteById(int id) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERITEM WHERE order_id = ?");
+            ps.setInt(1, id);
+            int deletedRows = ps.executeUpdate();
+
+            conn.commit();
+            return deletedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting ORDERItem");
+            e.printStackTrace();
+        }
         return false;
     }
 }

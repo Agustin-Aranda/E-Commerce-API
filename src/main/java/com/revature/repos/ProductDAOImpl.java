@@ -113,6 +113,34 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public Product update(Product obj) {
+        String sql = "UPDATE PRODUCT SET name = ?, description = ?, price = ?, stock = ? WHERE product_id = ? RETURNING *;";
+
+        try (Connection conn = ConnectionUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, obj.getName());
+            ps.setString(2, obj.getDescription());
+            ps.setBigDecimal(3, obj.getPrice());
+            ps.setInt(4, obj.getStock());
+            ps.setInt(5, obj.getProductId());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getBigDecimal("price"));
+                p.setStock(rs.getInt("stock"));
+
+                return p;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not update the product");
+            e.printStackTrace();
+        }
         return null;
     }
 
