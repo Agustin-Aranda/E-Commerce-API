@@ -3,26 +3,37 @@ package com.revature.models;
 public class OrderItem {
     private int OrderItemId;
 
-    private Order order;
+    private int OrderId;
 
-    private Product product;
+    private int ProductId;
 
     private int Quantity;
 
     private double Price;
+
+    public  OrderItem(int orderItemId, int orderId, int productId, int quantity, double price){
+        this.OrderItemId = orderItemId;
+        this.OrderId = orderId;
+        this.ProductId = productId;
+        this.Quantity = quantity;
+        this.Price = price;
+    }
+    public OrderItem(){
+
+    }
 
     // Getters and Setters
     public int getOrderItemId() { return OrderItemId;}
 
     public void setOrderItemId(int orderItemId) { OrderItemId = orderItemId;}
 
-    public Product getProduct() { return product;}
+    public int getProductId() { return ProductId;}
 
-    public void setProduct(Product product) { this.product = product;}
+    public void setProductId(int productId) { this.ProductId = productId;}
 
-    public Order getOrder() { return order; }
+    public int getOrderId() { return OrderId; }
 
-    public void setOrder(Order order) { this.order = order;}
+    public void setOrderId(int order) { this.OrderId = order;}
 
     public int getQuantity() { return Quantity;}
 

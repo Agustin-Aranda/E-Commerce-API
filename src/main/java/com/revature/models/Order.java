@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Order {
     private int OrderId;
 
-    private User user;
+    private int UserId;
 
     private double TotalPrice;
 
@@ -13,15 +13,28 @@ public class Order {
 
     private LocalDateTime CreatedAt;
 
+    public Order(int orderId, int userId, double totalPrice, OrderStatus status, LocalDateTime createdAt){
+        this.OrderId = orderId;
+        this.UserId = userId;
+        this.TotalPrice = totalPrice;
+        // Set default value of status
+        this.Status = status.PENDING;
+        this.CreatedAt = createdAt;
+    }
+
+    public Order() {
+
+    }
+
     //Getters and Setters
 
     public int getOrderId() {return OrderId;}
 
     public void setOrderId(int orderId) {OrderId = orderId;}
 
-    public User getUser() {return user;}
+    public int getUserId() {return UserId;}
 
-    public void setUser(User user) {this.user = user;}
+    public void setUserId(int userId) {this.UserId = userId;}
 
     public double getTotalPrice() {return TotalPrice;}
 

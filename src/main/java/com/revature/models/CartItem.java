@@ -3,11 +3,22 @@ package com.revature.models;
 public class CartItem {
     private int CartItemId;
 
-    private User user;
+    private int UserId;
 
-    private Product product;
+    private int ProductId;
 
     private int Quantity;
+
+    public CartItem(int cartItemId, int userId, int productId, int quantity){
+        this.CartItemId = cartItemId;
+        this.UserId = userId;
+        this.ProductId = productId;
+        this.Quantity = quantity;
+    }
+
+    public CartItem() {
+
+    }
 
     //Getters and Setters
 
@@ -15,15 +26,15 @@ public class CartItem {
 
     public void setCartItemId(int cartItemId) {CartItemId = cartItemId;}
 
-    public User getUser() {return user;}
+    public int getUserId() {return UserId;}
 
-    public void setUser(User user) {this.user = user;}
+    public void setUserId(int userId) {this.UserId = userId;}
 
     public int getQuantity() {return Quantity;}
 
     public void setQuantity(int quantity) {Quantity = quantity;}
 
-    public Product getProduct() {return product;}
+    public int getProductId() {return ProductId;}
 
-    public void setProduct(Product product) {this.product = product;}
+    public void setProductId(int productId) {this.ProductId = productId;}
 }

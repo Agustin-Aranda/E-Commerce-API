@@ -48,7 +48,6 @@ public class ConnectionUtil {
             password = props.getProperty("password");
 
             conn = DriverManager.getConnection(url,username, password);
-            System.out.println("Connected to the database");
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -118,6 +118,51 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public boolean deleteById(int id) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM PRODUCT WHERE product_id = ?");
+            ps.setInt(1, id);
+            int deletedRows = ps.executeUpdate();
+
+            conn.commit();
+            return deletedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting product");
+            e.printStackTrace();
+        }
         return false;
+    }
+
+    @Override
+    public List<Product> getByCategory(int categoryId) {
+        List<Product> ProductsByCategory = new ArrayList<>();
+
+        Connection conn = ConnectionUtil.getConnection();
+
+        String sql = "SELECT * FROM PRODUCT WHERE category_id";
+
+        try {
+            // We need to create Statement Object
+            Statement stmt = conn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setPrice(rs.getBigDecimal("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setCategory(rs.getInt("category_id"));
+
+                ProductsByCategory.add(p);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not get all Products!");
+            e.printStackTrace();
+        }
+        return ProductsByCategory;
     }
 }

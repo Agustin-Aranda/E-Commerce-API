@@ -11,7 +11,6 @@ import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
-
     @Override
     public User getUserByEmail(String email) {
         try (Connection conn = ConnectionUtil.getConnection()) {
