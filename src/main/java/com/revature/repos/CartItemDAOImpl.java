@@ -7,10 +7,8 @@ import com.revature.repos.interfaces.CartItemDAO;
 import com.revature.util.ConnectionUtil;
 import com.revature.util.DateUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartItemDAOImpl implements CartItemDAO {
@@ -52,11 +50,62 @@ public class CartItemDAOImpl implements CartItemDAO {
 
     @Override
     public List<CartItem> getAll() {
-        return List.of();
+        List<CartItem> allCartItems = new ArrayList<>();
+
+        Connection conn = ConnectionUtil.getConnection();
+
+        String sql = "SELECT * FROM CARTITEM";
+
+        try {
+            // We need to create Statement Object
+            Statement stmt = conn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+
+                CartItem ca = new CartItem();
+                ca.setCartItemId(rs.getInt("cart_item_id"));
+                ca.setUserId(rs.getInt("user_id"));
+                ca.setProductId(rs.getInt("product_id"));
+                ca.setQuantity(rs.getInt("quantity"));
+
+                allCartItems.add(ca);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not get all CartItems!");
+            e.printStackTrace();
+        }
+        return allCartItems;
     }
 
     @Override
     public CartItem getById(int id) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+
+            String sql = "SELECT * FROM CARTITEM WHERE cart_item_id = ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, id);
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                CartItem ca = new CartItem();
+                ca.setCartItemId(rs.getInt("cart_item_id"));
+                ca.setUserId(rs.getInt("user_id"));
+                ca.setProductId(rs.getInt("product_id"));
+                ca.setQuantity(rs.getInt("quantity"));
+
+                return ca;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not retrieve CartItem by Id");
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -67,6 +116,19 @@ public class CartItemDAOImpl implements CartItemDAO {
 
     @Override
     public boolean deleteById(int id) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM CARTITEM WHERE cart_item_id = ?");
+            ps.setInt(1, id);
+            int deletedRows = ps.executeUpdate();
+
+            conn.commit();
+            return deletedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting CartItem");
+            e.printStackTrace();
+        }
         return false;
     }
 }
