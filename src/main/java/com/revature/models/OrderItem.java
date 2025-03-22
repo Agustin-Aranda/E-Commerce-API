@@ -1,5 +1,7 @@
 package com.revature.models;
 
+import java.math.BigDecimal;
+
 public class OrderItem {
     private int OrderItemId;
 
@@ -9,9 +11,9 @@ public class OrderItem {
 
     private int Quantity;
 
-    private double Price;
+    private BigDecimal Price;
 
-    public  OrderItem(int orderItemId, int orderId, int productId, int quantity, double price){
+    public  OrderItem(int orderItemId, int orderId, int productId, int quantity, BigDecimal price){
         this.OrderItemId = orderItemId;
         this.OrderId = orderId;
         this.ProductId = productId;
@@ -39,7 +41,7 @@ public class OrderItem {
 
     public void setQuantity(int quantity) { Quantity = quantity;}
 
-    public double getPrice() { return Price;}
+    public BigDecimal getPrice() { return Price;}
 
-    public void setPrice(double price) { Price = price;}
+    public void setPrice(BigDecimal price) { Price = price;}
 }

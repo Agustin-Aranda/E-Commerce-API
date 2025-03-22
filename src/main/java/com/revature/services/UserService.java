@@ -4,6 +4,7 @@ import com.revature.models.User;
 import com.revature.repos.interfaces.UserDAO;
 import com.revature.util.PasswordUtil;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class UserService {
@@ -17,7 +18,7 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    // TODO Validate Username Security
+    // TODO Validate Email
     public boolean validateEmail(String email){
         //Email must be in correct email format
         return email == null || !pattern.matcher(email).matches();
@@ -25,7 +26,7 @@ public class UserService {
 
     // TODO Validate Email availability
     // If a email is already register we want to return false (the email is already using)
-    public boolean isUsernameAvailable(String email){
+    public boolean isEmailAvailable(String email){
         return userDAO.getUserByEmail(email) == null;
     }
 
@@ -72,11 +73,42 @@ public class UserService {
         if (returnedUser == null){
             return null;
         }
-
         if(PasswordUtil.checkPassword(password,returnedUser.getPassword())){
             return returnedUser;
         } return null;
-
     }
+
+    // TODO Get All Users
+    public List<User> getAllUsers(){
+        return userDAO.getAll();
+    }
+
+    // TODO Get  user by Email
+    public User getUserByEmail(String email){
+        return userDAO.getUserByEmail(email);
+    }
+
+    // TODO Get User by Id
+    public User getUserById(int id){ return userDAO.getById(id); }
+
+    // TODO Update User
+    public User UpdateUser(int userId, String firstName, String lastName, String email, String password) {
+        // Get the user by Id
+        User existingUser = userDAO.getById(userId);
+
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        existingUser.setFirstName(firstName);
+        existingUser.setLastName(lastName);
+        existingUser.setEmail(email);
+        existingUser.setPassword(password);
+
+        return userDAO.update(existingUser);
+    }
+
+    //TODO Delete User
+    public boolean DeleteUser(int id){ return userDAO.deleteById(id); }
 
 }

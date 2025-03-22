@@ -1,11 +1,8 @@
 package com.revature.repos;
 
 import com.revature.models.Product;
-import com.revature.models.Role;
-import com.revature.models.User;
 import com.revature.repos.interfaces.ProductDAO;
 import com.revature.util.ConnectionUtil;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,7 @@ public class ProductDAOImpl implements ProductDAO {
         try (Connection conn = ConnectionUtil.getConnection()) {
 
             // Adding returning * to the end will return the user directly added to the database
-            String sql = "INSERT INTO PRODUCT (name, description, price, stock) VALUES " +
+            String sql = "INSERT INTO PRODUCT (name, description, price, stock, category_id) VALUES " +
                     "(?, ?, ?, ?) RETURNING *;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -26,6 +23,7 @@ public class ProductDAOImpl implements ProductDAO {
             ps.setString(2, obj.getDescription());
             ps.setBigDecimal(3, obj.getPrice());
             ps.setInt(4, obj.getStock());
+            ps.setInt(5, obj.getCategory());
 
             // Execute the statement
             ResultSet rs = ps.executeQuery();
@@ -37,6 +35,7 @@ public class ProductDAOImpl implements ProductDAO {
                 p.setDescription(rs.getString("description"));
                 p.setPrice(rs.getBigDecimal("price"));
                 p.setStock(rs.getInt("stock"));
+                p.setCategory(rs.getInt("category_id"));
 
                 return p;
 
@@ -69,6 +68,7 @@ public class ProductDAOImpl implements ProductDAO {
                 p.setName(rs.getString("name"));
                 p.setPrice(rs.getBigDecimal("price"));
                 p.setStock(rs.getInt("stock"));
+                p.setCategory(rs.getInt("category_id"));
 
                 allProducts.add(p);
             }
@@ -100,6 +100,7 @@ public class ProductDAOImpl implements ProductDAO {
                 p.setDescription(rs.getString("description"));
                 p.setPrice(rs.getBigDecimal("price"));
                 p.setStock(rs.getInt("stock"));
+                p.setCategory(rs.getInt("category_id"));
 
                 return p;
             }
@@ -113,7 +114,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public Product update(Product obj) {
-        String sql = "UPDATE PRODUCT SET name = ?, description = ?, price = ?, stock = ? WHERE product_id = ? RETURNING *;";
+        String sql = "UPDATE PRODUCT SET name = ?, description = ?, price = ?, stock = ?, category_id = ? WHERE product_id = ? RETURNING *;";
 
         try (Connection conn = ConnectionUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -122,7 +123,9 @@ public class ProductDAOImpl implements ProductDAO {
             ps.setString(2, obj.getDescription());
             ps.setBigDecimal(3, obj.getPrice());
             ps.setInt(4, obj.getStock());
-            ps.setInt(5, obj.getProductId());
+            ps.setInt(5, obj.getCategory());
+            ps.setInt(6, obj.getProductId());
+
 
             ResultSet rs = ps.executeQuery();
 
@@ -133,6 +136,7 @@ public class ProductDAOImpl implements ProductDAO {
                 p.setDescription(rs.getString("description"));
                 p.setPrice(rs.getBigDecimal("price"));
                 p.setStock(rs.getInt("stock"));
+                p.setCategory(rs.getInt("category_id"));
 
                 return p;
             }

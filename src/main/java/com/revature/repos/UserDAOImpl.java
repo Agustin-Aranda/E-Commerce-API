@@ -14,27 +14,21 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserByEmail(String email) {
         try (Connection conn = ConnectionUtil.getConnection()) {
-
             String sql = "SELECT * FROM USUARIOS WHERE EMAIL = ?";
-
             PreparedStatement ps = conn.prepareStatement(sql);
-
             ps.setString(1, email);
-
             // Execute the query
             ResultSet rs = ps.executeQuery();
 
             // This will only return one user so we'll do IF rs.next()
             if (rs.next()) {
                 User u = new User();
-
                 u.setUserId(rs.getInt("user_id"));
                 u.setFirstName(rs.getString("first_name"));
                 u.setLastName(rs.getString("last_name"));
                 u.setPassword(rs.getString("password"));
                 u.setEmail(rs.getString("email"));
                 u.setRole(Role.valueOf(rs.getString("role"))); // We need to cast this to an ENUM
-
                 return u;
             }
 
@@ -170,7 +164,7 @@ public class UserDAOImpl implements UserDAO {
             ps.setString(2, obj.getLastName());
             ps.setString(3, obj.getEmail());
             ps.setString(4, obj.getPassword());
-            ps.setInt(6, obj.getUserId());
+            ps.setInt(5, obj.getUserId());
 
             ResultSet rs = ps.executeQuery();
 

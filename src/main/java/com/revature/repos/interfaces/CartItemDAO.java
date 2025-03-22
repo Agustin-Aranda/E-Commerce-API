@@ -2,6 +2,11 @@ package com.revature.repos.interfaces;
 
 import com.revature.models.CartItem;
 
-public interface CartItemDAO extends GeneralDAO<CartItem> {
+import java.util.List;
 
+public interface CartItemDAO extends GeneralDAO<CartItem> {
+    CartItem addToCart(CartItem obj);
+    CartItem removeFromCart(int userId, int productId);
+    CartItem updateCartQuantity(int userId, int productId, int newQuantity);
+    List<CartItem> getCartItemsByUserId(int userId);
 }

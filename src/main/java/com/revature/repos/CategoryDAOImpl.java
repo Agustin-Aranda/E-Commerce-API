@@ -82,7 +82,6 @@ public class CategoryDAOImpl implements CategoryDAO {
                 ca.setName(rs.getString("name"));
                 return ca;
             }
-
         } catch (SQLException e) {
             System.out.println("Could not retrieve category by Id");
             e.printStackTrace();
@@ -92,6 +91,27 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public Category update(Category obj) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+
+            String sql = "UPDATE CATEGORY SET  name = ? WHERE category_id = ? RETURNING *;";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, obj.getName());
+            ps.setInt(6, obj.getCategoryId());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Category c  = new Category();
+                c.setCategoryId(rs.getInt("category_id"));
+                c.setName(rs.getString("name"));
+                return c;
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not update the category ");
+            e.printStackTrace();
+        }
         return null;
     }
 
