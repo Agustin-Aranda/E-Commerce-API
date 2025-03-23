@@ -16,11 +16,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     public Category create(Category obj) {
         try (Connection conn = ConnectionUtil.getConnection()) {
 
-            String sql = "INSERT INTO CATEGORY (name) VALUES " +
-                    "(?) RETURNING *;";
+            String sql = "INSERT INTO CATEGORY (category_id =?, name =?) VALUES " +
+                    "(?,?) RETURNING *;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, obj.getName());
+            ps.setInt(1,obj.getCategoryId());
+            ps.setString(2, obj.getName());
 
             ResultSet rs = ps.executeQuery();
 
@@ -98,7 +99,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, obj.getName());
-            ps.setInt(6, obj.getCategoryId());
+            ps.setInt(2, obj.getCategoryId());
 
             ResultSet rs = ps.executeQuery();
 

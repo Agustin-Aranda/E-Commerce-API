@@ -9,4 +9,5 @@ public interface CartItemDAO extends GeneralDAO<CartItem> {
     CartItem removeFromCart(int userId, int productId);
     CartItem updateCartQuantity(int userId, int productId, int newQuantity);
     List<CartItem> getCartItemsByUserId(int userId);
+    CartItem getCartItemsByUserIdAndProductId(int userId, int productId);
 }
