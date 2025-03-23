@@ -1,86 +1,70 @@
 package com.revature.controllers;
 
+import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.User;
 import com.revature.services.UserService;
 import com.revature.util.PasswordUtil;
+import io.javalin.http.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Scanner;
 
 public class UserController {
-    private UserService userService;
 
-    private Scanner scan;
+    private final UserService userService;
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserService userService, Scanner scan){
+
+    public UserController(UserService userService){
         this.userService = userService;
-        this.scan = scan;
+    }
+    //TODO Register new user
+    public void registerUserHandler(Context ctx){
+        User requestUser = ctx.bodyAsClass(User.class);
+
+        if (!userService.validateEmail(requestUser.getEmail())) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Email should be a valid email *YourEmail@gmail.com*!"));
+            return;
+        }
+
+        if (!userService.isEmailAvailable(requestUser.getEmail())) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Email is already in use!"));
+
+            // Log a warning for a user attempting to register with a taken name
+            logger.warn("register attemp for taking email" + requestUser.getEmail());
+            return;
+        }
+
+        if (!userService.validatePassword(requestUser.getPassword())){
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Password must contain an Uppercase letter, lowercase letter and must be at least 8 characters"));
+            return;
+        }
+
+        String hashPassword = PasswordUtil.hashPassword(requestUser.getPassword());
+
+        User registeredUser = userService.registerNewUser(
+                requestUser.getFirstName(),
+                requestUser.getLastName(),
+                requestUser.getEmail(),
+                requestUser.getPassword());
+        //If something fails we'll report a server error
+        if (registeredUser == null){
+            ctx.status(500);
+            ctx.json(new ErrorMessage("Something went wrong!"));
+            return;
+        }
+
+        logger.info("New user registered with email: " + registeredUser.getEmail());
+
+        ctx.status(202);
+        ctx.json(registeredUser);
     }
 
-    // TODO Register a New User
-    public User registerNewUser(){
-        // Take in user information for the account
-        // First name
-        System.out.println("What is your first name?");
-        String firstName = scan.nextLine();
-        // Last name
-        System.out.println("What is your last name?");
-        String lastName = scan.nextLine();
-        // Username
-        System.out.println("Enter a Email: ");
-        String email = scan.nextLine();
+    //TODO Login a user
 
-        // Validate the email fits our security metrics
-        // TODO tweak logic as needed
-        while (userService.validateEmail(email) || !userService.isEmailAvailable(email)){
-            if (userService.validateEmail(email)){
-                System.out.println("Email should be a valid email *YourEmail@gmail.com*! Please enter a new Email: ");
-                email = scan.nextLine();
-            } else {
-                System.out.println("Email is already in use! Please enter a new Email: ");
-                email = scan.nextLine();
-            }
-        }
 
-        // Password
-        System.out.println("Enter a password: ");
-        String password = scan.nextLine();
 
-        while (!userService.validatePassword(password)){
-            System.out.println("Password must contain an Uppercase letter, lowercase letter and must be at least 8 characters");
-            System.out.println("Please enter a new password: ");
-            password = scan.nextLine();
-        }
-
-        String hashPassword = PasswordUtil.hashPassword(password);;
-
-        // At this point the email and passwords should valid and available
-        System.out.println("You have successfully registered");
-        return userService.registerNewUser(firstName, lastName, email, hashPassword);
-    }
-
-    // TODO Login a User
-    public User loginUser(){
-        // Take in a username
-        System.out.println("Please enter your email:");
-        String email = scan.nextLine();
-        userService.validateEmail(email);
-
-        if (userService.validateEmail(email)) {
-            System.out.println("Email should be a valid email *YourEmail@gmail.com*! Please enter a new Email: ");
-            email = scan.nextLine();
-        }
-        // Take in a password
-        System.out.println("Please enter a password:");
-        String password = scan.nextLine();
-
-        // Attempt to login the user
-        User returnUser = userService.loginUser(email, password);
-        if (returnUser == null){
-            System.out.println("Username or password incorrect!");
-            return null;
-        }
-
-        System.out.println("Welcome back " + returnUser.getFirstName() +" " + returnUser.getLastName()+ "!");
-        return returnUser;
-    }
 }
