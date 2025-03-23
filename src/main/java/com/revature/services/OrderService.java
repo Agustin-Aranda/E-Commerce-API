@@ -40,6 +40,7 @@ public class OrderService {
         if (existingOrder == null){
             throw new IllegalArgumentException("The order doesn't exist");
         }
+        existingOrder.setStatus(status);
         Order updatedOrder = orderDAO.updateStatus(existingOrder, status);
         if (updatedOrder == null) {
             throw new RuntimeException("Failed to update order status.");

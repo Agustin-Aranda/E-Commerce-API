@@ -8,12 +8,12 @@ import com.revature.repos.interfaces.ProductDAO;
 import java.util.List;
 
 public class CartItemService {
-    private CartItemDAO cartItemDAO;
     private ProductDAO productDAO;
+    private CartItemDAO cartItemDAO;
 
-    public CartItemService(CartItemDAO cartItemDAO, ProductDAO productDAO){
-        this.cartItemDAO = cartItemDAO;
+    public CartItemService(ProductDAO productDAO, CartItemDAO cartItemDAO) {
         this.productDAO = productDAO;
+        this.cartItemDAO = cartItemDAO;
     }
 
     //TODO Get All
@@ -33,8 +33,10 @@ public class CartItemService {
     //TODO Add to Cart one Item
     public CartItem registerCartItem(int userId, int productId, int quantity) {
         //If the product exist continue
-        Product product = productDAO.getById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        Product product = productDAO.getById(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("Product not found");
+        }
         //If the quantity is bigger than the stock throw an exception
         if (quantity > product.getStock()) {
             throw new IllegalArgumentException("Not enough stock available.");
@@ -64,9 +66,10 @@ public class CartItemService {
 
     //TODO Update CartItem
     public CartItem updateCartQuantityFromCardItem(int userId, int productId, int newQuantity) {
-        Product product = productDAO.getById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
+        Product product = productDAO.getById(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("Product not found");
+        }
         if (newQuantity > product.getStock()) {
             throw new IllegalArgumentException("Not enough stock available.");
         }

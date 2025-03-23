@@ -20,9 +20,15 @@ public class OrderItem {
         this.Quantity = quantity;
         this.Price = price;
     }
+    public OrderItem(int productId, int quantity) {
+        this.ProductId = productId;
+        this.Quantity = quantity;
+    }
+
     public OrderItem(){
 
     }
+
 
     // Getters and Setters
     public int getOrderItemId() { return OrderItemId;}

@@ -125,15 +125,16 @@ public class CartItemDAOImpl implements CartItemDAO {
 
     @Override
     public CartItem updateCartQuantity(int userId, int productId, int newQuantity) {
-        try (Connection conn = ConnectionUtil.getConnection()) {
-            if (newQuantity > 0) {
-                String updateSQL = "UPDATE CARTITEM SET quantity = ? WHERE user_id = ? AND product_id = ? RETURNING *";
-                PreparedStatement ps = conn.prepareStatement(updateSQL);
-                ps.setInt(1, newQuantity);
-                ps.setInt(2, userId);
-                ps.setInt(3, productId);
+        String updateSQL = "UPDATE CARTITEM SET quantity = ? WHERE user_id = ? AND product_id = ? RETURNING *";
 
-                ResultSet rs = ps.executeQuery();
+        try (Connection conn = ConnectionUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(updateSQL)) {
+
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, userId);
+            ps.setInt(3, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     CartItem c = new CartItem();
                     c.setUserId(rs.getInt("user_id"));
@@ -146,6 +147,7 @@ public class CartItemDAOImpl implements CartItemDAO {
             System.out.println("Could not update cart quantity");
             e.printStackTrace();
         }
+
         return null;
     }
 

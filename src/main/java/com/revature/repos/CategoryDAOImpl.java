@@ -16,8 +16,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public Category create(Category obj) {
         try (Connection conn = ConnectionUtil.getConnection()) {
 
-            String sql = "INSERT INTO CATEGORY (category_id =?, name =?) VALUES " +
-                    "(?,?) RETURNING *;";
+            String sql = "INSERT INTO CATEGORY (category_id, name) VALUES (?,?) RETURNING *;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1,obj.getCategoryId());

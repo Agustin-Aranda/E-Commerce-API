@@ -21,6 +21,14 @@ public class Product {
         this.Price = price;
         this.Stock = stock;
         this.CategoryId = categoryId;
+    }
+    public Product (int productId, String name, String description, BigDecimal price, int stock, int categoryId){
+        this.ProductId = productId;
+        this.Name = name;
+        this.Description = description;
+        this.Price = price;
+        this.Stock = stock;
+        this.CategoryId = categoryId;
 
     }
 

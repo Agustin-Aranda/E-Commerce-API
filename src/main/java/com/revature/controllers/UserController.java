@@ -31,7 +31,7 @@ public class UserController {
 
         // Validate the email fits our security metrics
         // TODO tweak logic as needed
-        while (userService.validateEmail(email) || !userService.isUsernameAvailable(email)){
+        while (userService.validateEmail(email) || !userService.isEmailAvailable(email)){
             if (userService.validateEmail(email)){
                 System.out.println("Email should be a valid email *YourEmail@gmail.com*! Please enter a new Email: ");
                 email = scan.nextLine();

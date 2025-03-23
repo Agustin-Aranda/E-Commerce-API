@@ -21,7 +21,7 @@ public class UserService {
     // TODO Validate Email
     public boolean validateEmail(String email){
         //Email must be in correct email format
-        return email == null || !pattern.matcher(email).matches();
+            return email != null && pattern.matcher(email).matches();
     }
 
     // TODO Validate Email availability
