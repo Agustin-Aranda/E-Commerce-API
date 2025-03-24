@@ -20,7 +20,7 @@ public class CategoryService {
     public Category categoryById(int id){ return categoryDAO.getById(id); }
 
     //TODO Update category
-    public Category updateCategory(int id, String name){
+    public Category updateCategory(String name, int id){
         Category existingCategory = categoryDAO.getById(id);
         if (existingCategory == null){
             throw new IllegalArgumentException("The category does not exist");

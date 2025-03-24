@@ -3,6 +3,7 @@ package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.Category;
+import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.services.CategoryService;
 import com.revature.util.PasswordUtil;
@@ -63,7 +64,6 @@ public class CategoryController {
             return;
         }
         logger.info("New category registered with Id: " + registerCategory.getCategoryId());
-
         ctx.status(202);
         ctx.json(registerCategory);
     }
@@ -95,8 +95,8 @@ public class CategoryController {
 
 
         Category updatedCategory = categoryService.updateCategory(
-                category.getCategoryId(),
-                category.getName()
+                category.getName(),
+                CategoryId
         );
 
         if (updatedCategory == null) {
@@ -141,8 +141,9 @@ public class CategoryController {
         return ctx.sessionAttribute("UserId") != null;
     }
 
-    public boolean isAdmin(Context ctx){
-        return isLogged(ctx) && "ADMIN".equals(ctx.sessionAttribute("role"));
+    public boolean isAdmin(Context ctx) {
+        Role role = ctx.sessionAttribute("role");
+        return isLogged(ctx) && Role.ADMIN.equals(role);
     }
 
 

@@ -70,7 +70,7 @@ public class JavalinUtil {
                             get("/", orderItemController::getAllOrderItemsHandler);
                             get("/{id}", orderItemController::getOrderItemByIdHandler);
                             delete("/{id}", orderItemController::deleteOrderItemHandler);
-                            post("/place/{userId}", orderItemController::placeOrderHandler);
+                            post("/place/{UserId}", orderItemController::placeOrderHandler);
                         });
                         path("/cartItems", () -> {
                             get("/all", cartItemController::getAllCartItemsHandler);

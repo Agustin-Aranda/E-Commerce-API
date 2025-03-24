@@ -105,7 +105,7 @@ public class OderItemDAOImpl implements OrderItemDAO {
         try (Connection conn = ConnectionUtil.getConnection()) {
             conn.setAutoCommit(false);
 
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERITEM WHERE order_id = ?");
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM ORDERITEM WHERE order_item_id = ?");
             ps.setInt(1, id);
             int deletedRows = ps.executeUpdate();
 

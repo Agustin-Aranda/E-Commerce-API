@@ -52,6 +52,10 @@ public class OrderItemController {
             ctx.status(400).json(new ErrorMessage("Invalid OrderItem ID format!"));
             return;
         }
+        if (orderItemService.orderItemById(orderItemId) == null){
+            ctx.status(500).json(new ErrorMessage("OrderItem not found!"));
+            return;
+        }
 
         boolean deleted = orderItemService.deleterOrderItemById(orderItemId);
         if (!deleted) {

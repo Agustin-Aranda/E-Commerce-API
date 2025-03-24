@@ -90,6 +90,7 @@ public class CartItemDAOImpl implements CartItemDAO {
                 c.setUserId(insertRs.getInt("user_id"));
                 c.setProductId(insertRs.getInt("product_id"));
                 c.setQuantity(insertRs.getInt("quantity"));
+                c.setCartItemId(insertRs.getInt("cart_item_id"));
                 return c;
             }
         }
@@ -114,6 +115,7 @@ public class CartItemDAOImpl implements CartItemDAO {
                 removedItem.setUserId(rs.getInt("user_id"));
                 removedItem.setProductId(rs.getInt("product_id"));
                 removedItem.setQuantity(rs.getInt("quantity"));
+                removedItem.setCartItemId(rs.getInt("cart_item_id"));
                 return removedItem;
             }
         } catch (SQLException e) {
@@ -130,6 +132,7 @@ public class CartItemDAOImpl implements CartItemDAO {
         try (Connection conn = ConnectionUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(updateSQL)) {
 
+
             ps.setInt(1, newQuantity);
             ps.setInt(2, userId);
             ps.setInt(3, productId);
@@ -140,6 +143,7 @@ public class CartItemDAOImpl implements CartItemDAO {
                     c.setUserId(rs.getInt("user_id"));
                     c.setProductId(rs.getInt("product_id"));
                     c.setQuantity(rs.getInt("quantity"));
+                    c.setCartItemId(rs.getInt("cart_item_id"));
                     return c;
                 }
             }

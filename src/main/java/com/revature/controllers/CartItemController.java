@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.CartItem;
+import com.revature.models.Role;
 import com.revature.services.CartItemService;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
@@ -116,6 +117,17 @@ public class CartItemController {
         int productId = cartItem.getProductId();
         int quantity = cartItem.getQuantity();
 
+        if (quantity == 0){
+            try {
+                cartItem = cartItemService.DeleteFromCart(userId, productId);
+                ctx.status(200).json(new ErrorMessage("Since the quantity is 0 remove from Cart!"));
+                return;
+
+            } catch (IllegalArgumentException e) {
+                ctx.status(400).json(new ErrorMessage("Failed to delete order!"));
+            }
+        }
+
         try {
              cartItem = cartItemService.updateCartQuantityFromCardItem(userId, productId, quantity);
             ctx.status(200).json(new ErrorMessage("CartItem successfully updated!"));
@@ -136,7 +148,7 @@ public class CartItemController {
         try {
             cartItem = cartItemService.DeleteFromCart(userId, productId);
             logger.info("Deleted CartItem with ID: " + cartItem.getCartItemId());
-            ctx.status(200).json(new ErrorMessage("Order successfully deleted!"));
+            ctx.status(200).json(new ErrorMessage("CartItem successfully deleted!"));
 
         } catch (IllegalArgumentException e) {
             ctx.status(400).json(new ErrorMessage("Failed to delete order!"));
@@ -147,8 +159,9 @@ public class CartItemController {
         return ctx.sessionAttribute("UserId") != null;
     }
 
-    public boolean isAdmin(Context ctx){
-        return isLogged(ctx) && "ADMIN".equals(ctx.sessionAttribute("role"));
+    public boolean isAdmin(Context ctx) {
+        Role role = ctx.sessionAttribute("role");
+        return isLogged(ctx) && Role.ADMIN.equals(role);
     }
 
 }
