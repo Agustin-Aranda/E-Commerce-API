@@ -92,7 +92,7 @@ public class UserService {
     public User getUserById(int id){ return userDAO.getById(id); }
 
     // TODO Update User
-    public User UpdateUser(int userId, String firstName, String lastName, String email, String password) {
+    public User UpdateUser(String firstName, String lastName, String email, String password, int userId) {
         // Get the user by Id
         User existingUser = userDAO.getById(userId);
 

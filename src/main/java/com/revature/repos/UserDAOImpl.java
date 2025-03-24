@@ -88,7 +88,7 @@ public class UserDAOImpl implements UserDAO {
 
         Connection conn = ConnectionUtil.getConnection();
 
-        String sql = "SELECT * FROM USERS";
+        String sql = "SELECT * FROM USUARIOS";
 
         try {
             // We need to create Statement Object

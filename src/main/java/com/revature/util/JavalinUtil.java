@@ -41,19 +41,52 @@ public class JavalinUtil {
                     // Inside of here I have a config variable, this can be used for things like CORS configuration
                     config.router.apiBuilder(() -> {
                         path("/users", () -> {
-                            post("/register", userController:: registerUserHandler);
-                            //post("/login", userController:: loginHandler);
-                            //get("/", userController::getAllUsersHandler);
+                            post("/register", userController::registerUserHandler);
+                            post("/login", userController::loginHandler);
+                            get("/", userController::getAllUsersHandler);
+                            get("/email", userController::getUserByEmailHandler);
+                            get("/{id}", userController::getUserByIdHandler);
+                            put("/{id}", userController::updateUserHandler);
+                            delete("/{id}", userController::deleteUserHandler);
                         });
                         path("/products", () -> {
+                            get("/", productController::getAllProductsHandler);
+                            get("/{id}", productController::getProductByIdHandler);
+                            get("/category/{id}", productController::getProductByCategoryHandler);
+                            post("/", productController::registerProductHandler);
+                            put("/{id}", productController::updateProductHandler);
+                            delete("/{id}", productController::deleteProductHandler);
                         });
                         path("/orders", () -> {
+                            get("/", orderController::getAllOrdersHandler);
+                            get("/{id}", orderController::getOrderByIdHandler);
+                            get("/user/{id}", orderController::getOrdersByUserIdHandler);
+                            get("/status/{status}", orderController::getOrdersByStatusHandler);
+                            post("/", orderController::registerOrderHandler);
+                            put("/{id}/status", orderController::updateOrderStatusHandler);
+                            delete("/{id}", orderController::deleteOrderHandler);
                         });
                         path("/orderItems", () -> {
+                            get("/", orderItemController::getAllOrderItemsHandler);
+                            get("/{id}", orderItemController::getOrderItemByIdHandler);
+                            delete("/{id}", orderItemController::deleteOrderItemHandler);
+                            post("/place/{userId}", orderItemController::placeOrderHandler);
                         });
                         path("/cartItems", () -> {
+                            get("/all", cartItemController::getAllCartItemsHandler);
+                            get("/{id}", cartItemController::getCartItemByIdHandler);
+                            get("/user/{UserId}", cartItemController::getCartItemsByUserIdHandler);
+                            get("/user/{UserId}/product/{ProductId}", cartItemController::getCartItemProductHandler);
+                            post("/add", cartItemController::addToCartHandler);
+                            put("/update", cartItemController::updateCartItemHandler);
+                            delete("/delete", cartItemController::deleteFromCartHandler);
                         });
                         path("/categories", () -> {
+                            get("/", categoryController::getAllCategoriesHandler);
+                            get("/{id}", categoryController::getCategoryByIdHandler);
+                            post("/add", categoryController::createCategoryHandler);
+                            put("/{id}", categoryController::updateCategoryHandler);
+                            delete("/{id}", categoryController::deleteCategoryHandler);
                         });
                     });
                 })

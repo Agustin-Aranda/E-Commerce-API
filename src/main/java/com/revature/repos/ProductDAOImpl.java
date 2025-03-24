@@ -14,7 +14,7 @@ public class ProductDAOImpl implements ProductDAO {
 
             // Adding returning * to the end will return the user directly added to the database
             String sql = "INSERT INTO PRODUCT (name, description, price, stock, category_id) VALUES " +
-                    "(?, ?, ?, ?) RETURNING *;";
+                    "(?, ?, ?, ?, ?) RETURNING *;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -37,8 +37,8 @@ public class ProductDAOImpl implements ProductDAO {
                 p.setStock(rs.getInt("stock"));
                 p.setCategory(rs.getInt("category_id"));
 
+                p.setProductId(rs.getInt("product_id"));
                 return p;
-
             }
 
         } catch (SQLException e) {
@@ -172,13 +172,13 @@ public class ProductDAOImpl implements ProductDAO {
 
         Connection conn = ConnectionUtil.getConnection();
 
-        String sql = "SELECT * FROM PRODUCT WHERE category_id";
-
         try {
             // We need to create Statement Object
-            Statement stmt = conn.createStatement();
 
-            ResultSet rs = stmt.executeQuery(sql);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM PRODUCT WHERE category_id = ?");
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
 
                 Product p = new Product();

@@ -18,17 +18,16 @@ public class OrderDAOImpl implements OrderDAO {
         try (Connection conn = ConnectionUtil.getConnection()) {
 
             // Adding returning * to the end will return the user directly added to the database
-            String sql = "INSERT INTO ORDEN (order_id, user_id, total_price, status, created_at) VALUES " +
-                    "(?, ?, ?, ?, ?) RETURNING *;";
+            String sql = "INSERT INTO ORDEN ( user_id, total_price, status, created_at) VALUES " +
+                    "( ?, ?, ?, ?) RETURNING *;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
             // Set the values
-            ps.setInt(1, obj.getOrderId());
-            ps.setInt(2, obj.getUserId());
-            ps.setDouble(3, obj.getTotalPrice());
-            ps.setString(4, obj.getStatus().toString());
-            ps.setDate(5, DateUtil.getSqlDate());
+            ps.setInt(1, obj.getUserId());
+            ps.setDouble(2, obj.getTotalPrice());
+            ps.setString(3, obj.getStatus().toString());
+            ps.setDate(4, DateUtil.getSqlDate());
 
 
             // Execute the statement
@@ -37,12 +36,13 @@ public class OrderDAOImpl implements OrderDAO {
             if (rs.next()) {
                 Order o = new Order();
 
-                o.setOrderId(rs.getInt("order_id"));
+
                 o.setUserId(rs.getInt("user_id"));
                 o.setTotalPrice(rs.getDouble("total_price"));
                 o.setStatus( OrderStatus.valueOf(rs.getString("status")));
                 o.setCreatedAt( rs.getTimestamp("created_at").toLocalDateTime());
 
+                o.setOrderId(rs.getInt("order_id"));
                 return o;
             }
 
@@ -129,7 +129,10 @@ public class OrderDAOImpl implements OrderDAO {
                 Order o  = new Order();
 
                 o.setOrderId(rs.getInt("order_id"));
+                o.setUserId(rs.getInt("user_id"));
+                o.setTotalPrice(rs.getDouble("total_price"));
                 o.setStatus(OrderStatus.valueOf(rs.getString("status")));
+                o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
                 return o;
             }
@@ -167,9 +170,8 @@ public class OrderDAOImpl implements OrderDAO {
 
             ps.setInt(1, userId);
             // We need to create Statement Object
-            Statement stmt = conn.createStatement();
 
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Order or = new Order();
                 or.setOrderId(rs.getInt("order_id"));
